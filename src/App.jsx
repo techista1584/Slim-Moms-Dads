@@ -1,3 +1,4 @@
+import React from 'react';
 import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -28,7 +29,7 @@ const Login = lazy(() => import('pages/Login'));
 const Calculator = lazy(() => import('pages/Calculator'));
 const Registration = lazy(() => import('pages/Registration'));
 
-export const App = () => {
+const App = () => {
   const isAuth = useSelector(selectIsAuth);
   const userId = useSelector(selectUserId);
   const errorMesage = useSelector(selectError);
@@ -47,6 +48,7 @@ export const App = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuth]);
+
   return (
     <ThemeProvider theme={isDaddy ? daddyTheme : momsTheme}>
       <Background isAuth={isAuth}>
@@ -85,3 +87,5 @@ export const App = () => {
     </ThemeProvider>
   );
 };
+
+export default App; // Ensure App is exported as default
