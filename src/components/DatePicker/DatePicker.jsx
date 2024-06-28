@@ -1,10 +1,10 @@
 import CalendarButton from './CalendarButton/CalendarButton';
-import { DateContainer, DateString, MyCalendar } from './DatePicker.styled';
+import style from './DatePicker.module.css';
 import 'react-calendar/dist/Calendar.css';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Calendar from 'react-calendar'; // Assuming Calendar component is imported correctly
 
 export default function DatePicker({ date, setDate }) {
   const [showCalendar, setShowCalendar] = useState(false);
@@ -16,9 +16,10 @@ export default function DatePicker({ date, setDate }) {
     .toLocaleDateString('en-GB')
     .replaceAll('/', '.');
 
-  const handleToogleCalendar = () => {
+  const handleToggleCalendar = () => {
     setShowCalendar(!showCalendar);
   };
+
   const handleCloseCalendar = e => {
     if (e.key === 'Escape') setShowCalendar(false);
   };
@@ -30,7 +31,7 @@ export default function DatePicker({ date, setDate }) {
     };
   }, []);
 
-  const handleCalendar = async newDate => {
+  const handleCalendar = newDate => {
     const rawDate = new Date(newDate);
     setDate(rawDate);
     setShowCalendar(false);
@@ -38,23 +39,27 @@ export default function DatePicker({ date, setDate }) {
   };
 
   return (
-    <DateContainer>
-      <DateString state={state}>{normalizedDate}</DateString>
+    <div className={style.DateContainer}>
+      <p className={`${style.DateString} ${state === 'pending' ? style.pending : ''}`}>
+        {normalizedDate}
+      </p>
       <CalendarButton
         showCalendar={showCalendar}
-        onClick={handleToogleCalendar}
+        onClick={handleToggleCalendar}
       />
       {showCalendar && (
-        <MyCalendar
+        <Calendar
+          className={style.MyCalendar} // Ensure correct class name
           maxDate={new Date()}
           onClickDay={handleCalendar}
           value={date}
         />
       )}
-    </DateContainer>
+    </div>
   );
 }
+
 DatePicker.propTypes = {
-  date: PropTypes.object,
-  setDate: PropTypes.func,
+  date: PropTypes.object.isRequired, // Ensure setDate is required
+  setDate: PropTypes.func.isRequired,
 };
